@@ -1,0 +1,29 @@
+@page
+@model Cember.Admin.Pages.BrandProfiles.CreateModel
+@{
+    ViewData["Title"] = "Yeni Marka";
+}
+<h2>Yeni Marka Profili</h2>
+@if (Model.Error is not null)
+{
+    <p style="color:red">@Model.Error</p>
+}
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label>Marka adı</label><br />
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label>Birincil renk</label><br />
+        <input asp-for="PrimaryColorHex" type="color" />
+    </div>
+    <div>
+        <label>İkincil renk (opsiyonel)</label><br />
+        <input asp-for="SecondaryColorHex" type="color" />
+    </div>
+    <div>
+        <label>Logo (şeffaf PNG önerilir)</label><br />
+        <input asp-for="Logo" type="file" accept="image/*" />
+    </div>
+    <button type="submit">Oluştur</button>
+</form>

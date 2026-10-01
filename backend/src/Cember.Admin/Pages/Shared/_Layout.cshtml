@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Çember Admin</title>
+    <link rel="stylesheet" href="~/site.css" />
+</head>
+<body>
+    <header style="display:flex; justify-content:space-between; align-items:center; padding:12px 24px; background:#1b1b1b; color:#fff;">
+        <nav>
+            <a href="/BrandProfiles" style="color:#fff; margin-right:16px;">Marka Profilleri</a>
+            <a href="/Circles" style="color:#fff; margin-right:16px;">Çemberler</a>
+            <a href="/Reports" style="color:#fff;">Şikayetler</a>
+        </nav>
+        <form method="post" action="/Login?handler=SignOut">
+            <button type="submit">Çıkış yap</button>
+        </form>
+    </header>
+    <main style="padding:24px; max-width:960px; margin:0 auto;">
+        @RenderBody()
+    </main>
+</body>
+</html>

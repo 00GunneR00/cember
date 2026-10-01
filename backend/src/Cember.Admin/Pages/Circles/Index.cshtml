@@ -1,0 +1,46 @@
+@page
+@model Cember.Admin.Pages.Circles.IndexModel
+@{
+    ViewData["Title"] = "Çemberler";
+}
+<h2>Çemberler</h2>
+<p style="opacity:.7">Sistemdeki tüm çemberler — sahibi kim olursa olsun.</p>
+@if (Model.Error is not null)
+{
+    <p style="color:red">@Model.Error</p>
+}
+@if (Model.Message is not null)
+{
+    <p style="color:green">@Model.Message</p>
+}
+
+<table>
+    <thead>
+        <tr><th>Ad</th><th>Etkinlik tarihi</th><th>Sahip</th><th>Marka</th><th>Marka ata</th><th>Export</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var circle in Model.Circles)
+    {
+        <tr>
+            <td>@circle.Name @(circle.IsArchived ? "(arşivlendi)" : "")</td>
+            <td>@circle.EventDate</td>
+            <td>@circle.HostDisplayName</td>
+            <td>@(circle.Brand?.Name ?? "—")</td>
+            <td>
+                <form method="post" asp-page-handler="Assign" style="display:flex; gap:4px;">
+                    <input type="hidden" name="circleId" value="@circle.Id" />
+                    <select name="brandProfileId">
+                        <option value="">— marka kaldır —</option>
+                        @foreach (var brand in Model.Brands)
+                        {
+                            <option value="@brand.Id" selected="@(circle.Brand?.Id == brand.Id)">@brand.Name</option>
+                        }
+                    </select>
+                    <button type="submit">Uygula</button>
+                </form>
+            </td>
+            <td><a href="/circles/@circle.Id/export">Fotoğrafları indir (.zip)</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

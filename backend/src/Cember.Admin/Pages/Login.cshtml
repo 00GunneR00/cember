@@ -1,0 +1,45 @@
+@page
+@model Cember.Admin.Pages.LoginModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>Çember Admin — Giriş</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body style="font-family: -apple-system, Segoe UI, Roboto, sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; background:#111; color:#eee;">
+    <div style="text-align:center;">
+        <h1>Çember Admin</h1>
+        <div id="g_id_onload"
+             data-client_id="@Model.GoogleClientId"
+             data-callback="onCredential">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+        <p id="error" style="color:#f66;"></p>
+    </div>
+    <script>
+        async function onCredential(response) {
+            const errorEl = document.getElementById('error');
+            errorEl.textContent = '';
+            try {
+                const res = await fetch('/Login?handler=SignIn', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ credential: response.credential })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    window.location.href = data.redirectUrl || '/';
+                } else {
+                    errorEl.textContent = data.message || 'Giriş başarısız.';
+                }
+            } catch (e) {
+                errorEl.textContent = 'Bağlantı hatası.';
+            }
+        }
+    </script>
+</body>
+</html>

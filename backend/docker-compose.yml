@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cember
+      POSTGRES_USER: cember
+      POSTGRES_PASSWORD: cember_dev_pw
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # S3-compatible object storage for photos and recap videos. MinIO stopped publishing its
+  # Docker images, so this uses RustFS — same S3 API, same credentials, same ports.
+  storage:
+    image: rustfs/rustfs:latest
+    environment:
+      RUSTFS_ACCESS_KEY: cember_minio
+      RUSTFS_SECRET_KEY: cember_minio_dev_pw
+      RUSTFS_CONSOLE_ENABLE: "true"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - storagedata:/data
+
+  storage-init:
+    image: amazon/aws-cli:latest
+    depends_on:
+      - storage
+    environment:
+      AWS_ACCESS_KEY_ID: cember_minio
+      AWS_SECRET_ACCESS_KEY: cember_minio_dev_pw
+      AWS_DEFAULT_REGION: us-east-1
+    entrypoint: >
+      /bin/sh -c "
+      until aws --endpoint-url http://storage:9000 s3 ls >/dev/null 2>&1; do sleep 1; done &&
+      (aws --endpoint-url http://storage:9000 s3 mb s3://cember-media || true)"
+
+volumes:
+  pgdata:
+  storagedata:

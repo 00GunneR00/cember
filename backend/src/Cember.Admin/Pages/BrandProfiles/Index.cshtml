@@ -1,0 +1,38 @@
+@page
+@model Cember.Admin.Pages.BrandProfiles.IndexModel
+@{
+    ViewData["Title"] = "Marka Profilleri";
+}
+<h2>Marka Profilleri</h2>
+<p><a href="/BrandProfiles/Create">+ Yeni marka</a></p>
+@if (Model.Error is not null)
+{
+    <p style="color:red">@Model.Error</p>
+}
+<table>
+    <thead>
+        <tr><th>Logo</th><th>Ad</th><th>Renkler</th><th>Id</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var brand in Model.Brands)
+    {
+        <tr>
+            <td>
+                @if (brand.LogoUrl is not null)
+                {
+                    <img src="@brand.LogoUrl" alt="" style="height:32px" />
+                }
+            </td>
+            <td>@brand.Name</td>
+            <td>
+                <span style="display:inline-block;width:16px;height:16px;background:@brand.PrimaryColorHex;border:1px solid #333;"></span>
+                @if (brand.SecondaryColorHex is not null)
+                {
+                    <span style="display:inline-block;width:16px;height:16px;background:@brand.SecondaryColorHex;border:1px solid #333;"></span>
+                }
+            </td>
+            <td><code>@brand.Id</code></td>
+        </tr>
+    }
+    </tbody>
+</table>

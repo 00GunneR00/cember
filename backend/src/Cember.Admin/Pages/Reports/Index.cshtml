@@ -1,0 +1,52 @@
+@page
+@model Cember.Admin.Pages.Reports.IndexModel
+@{
+    ViewData["Title"] = "Şikayetler";
+}
+<h2>Şikayetler</h2>
+<p style="opacity:.7">Açık şikayeti olan fotoğraflar. 3 farklı kişi şikayet ettiğinde fotoğraf herkesten otomatik gizlenir; karar senin.</p>
+@if (Model.Error is not null)
+{
+    <p style="color:red">@Model.Error</p>
+}
+@if (Model.Message is not null)
+{
+    <p style="color:green">@Model.Message</p>
+}
+@if (Model.Reports.Count == 0 && Model.Error is null)
+{
+    <p>Bekleyen şikayet yok. 🎉</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr><th>Fotoğraf</th><th>Çember / Yükleyen</th><th>Şikayet</th><th>Nedenler ve notlar</th><th>Durum</th><th>Karar</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var report in Model.Reports)
+        {
+            <tr>
+                <td><img src="@report.ThumbnailUrl" alt="" style="width:120px; border-radius:8px;" /></td>
+                <td>@report.CircleName<br /><span style="opacity:.7">@report.UploaderDisplayName</span></td>
+                <td>@report.ReportCount kişi<br /><span style="opacity:.7">@report.FirstReportedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span></td>
+                <td>
+                    @string.Join(", ", report.Reasons.Select(IndexModel.ReasonLabel))
+                    @foreach (var note in report.Notes)
+                    {
+                        <div style="opacity:.8">“@note”</div>
+                    }
+                </td>
+                <td>@(report.IsHidden ? "Gizlendi" : "Görünür")</td>
+                <td>
+                    <form method="post" asp-page-handler="Resolve" style="display:flex; gap:4px;">
+                        <input type="hidden" name="photoId" value="@report.PhotoId" />
+                        <button type="submit" name="removePhoto" value="true" onclick="return confirm('Fotoğraf kalıcı olarak silinsin mi?')">Kaldır</button>
+                        <button type="submit" name="removePhoto" value="false">Sorun yok</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
