@@ -1,5 +1,7 @@
 # Çember
 
+https://github.com/user-attachments/assets/dfd2d56f-584a-468f-b38c-e3ed79d52f68
+
 Bir etkinliğin fotoğraflarını tek albümde toplayan uygulama. Düğün, doğum günü, gezi ya da buluşma için bir "çember" açarsın; davetliler QR kodla ya da bağlantıyla katılır ve herkes çektiği fotoğrafları aynı albüme yükler. Etkinlik bitince fotoğraflar kimsenin telefonunda dağınık kalmaz.
 
 Depo üç parçadan oluşur: Flutter mobil uygulaması, ASP.NET Core API ve yönetim paneli.
